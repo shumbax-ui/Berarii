@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0b1a0b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Berarii din Vegas ⚽</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --pitch-dark:#1e521e;--pitch-light:#2d6e2d;
+  --gold:#f0c040;--gold2:#d4a820;--gold-glow:rgba(240,192,64,0.25);
+  --card:rgba(10,22,10,0.92);--border:rgba(240,192,64,0.18);--border2:rgba(255,255,255,0.07);
+  --text:#f2f2f2;--muted:rgba(242,242,242,0.45);--muted2:rgba(242,242,242,0.2);
+  --green-a:#4ade80;--amber:#fbbf24;--red:#f87171;--blue:#60a5fa;
+  --radius:14px;--radius-sm:9px;--radius-xs:6px;
+}
+html,body{height:100%;overflow:hidden;font-family:'Barlow',sans-serif;color:var(--text);background:#0b1a0b}
+::-webkit-scrollbar{width:7px}
+::-webkit-scrollbar-track{background:rgba(0,0,0,0.3);border-radius:4px}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#f5c842 0%,#e0a800 50%,#fffde0 52%,#d4eda0 56%,#9dc46a 100%);border-radius:4px;border:1px solid rgba(0,0,0,0.3)}
+body{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='28'%3E%3Crect x='4' y='4' width='14' height='19' rx='3' fill='%23f5c842' stroke='%23b8900a' stroke-width='1.2'/%3E%3Crect x='4' y='4' width='14' height='7' rx='2' fill='%23fffde0'/%3E%3Crect x='18' y='8' width='4' height='9' rx='2' fill='%23e0a800' stroke='%23b8900a' stroke-width='1'/%3E%3C/svg%3E") 4 0,auto}
+.pitch-wrap{position:fixed;inset:0;z-index:0;overflow:hidden;background:repeating-linear-gradient(180deg,var(--pitch-dark) 0px,var(--pitch-dark) 54px,var(--pitch-light) 54px,var(--pitch-light) 108px)}
+.pitch-overlay{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 30%,rgba(0,0,0,0.65) 100%)}
+.pitch-vignette{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0) 15%,rgba(0,0,0,0) 85%,rgba(0,0,0,0.55) 100%)}
+.pitch-svg{position:absolute;inset:0;width:100%;height:100%}
+.app{position:relative;z-index:10;height:100vh;display:flex;flex-direction:column;max-width:520px;margin:0 auto}
+.scroll-body{flex:1;overflow-y:auto;overflow-x:hidden;padding:0 14px 90px;-webkit-overflow-scrolling:touch}
+.header{flex-shrink:0;background:rgba(6,14,6,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:13px 14px 11px;z-index:50}
+.header-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.logo-main{font-family:'Bebas Neue',sans-serif;font-size:27px;letter-spacing:2.5px;color:var(--gold);text-shadow:0 0 24px rgba(240,192,64,0.5),0 2px 8px rgba(0,0,0,0.9);line-height:1}
+.logo-sub{font-size:9px;letter-spacing:3.5px;text-transform:uppercase;color:var(--muted);margin-top:1px;margin-left:2px}
+.header-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.user-pill{display:flex;align-items:center;gap:6px;background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.3);border-radius:20px;padding:4px 10px 4px 5px;font-size:12px;font-weight:700;color:var(--gold);max-width:150px}
+.user-pill span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ava-hdr{width:22px;height:22px;border-radius:50%;background:var(--gold2);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:900;color:#000;flex-shrink:0}
+.btn-logout{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:rgba(248,113,113,0.85);border-radius:var(--radius-xs);padding:5px 10px;font-size:11px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif}
+.btn-login-hdr{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#000;border:none;border-radius:var(--radius-xs);padding:7px 14px;font-size:12px;font-weight:800;cursor:pointer;font-family:'Barlow',sans-serif}
+.tabs{display:flex;gap:3px;background:rgba(0,0,0,0.5);border-radius:var(--radius-sm);padding:4px;margin:14px 0}
+.tab{flex:1;padding:8px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;border:none;background:transparent;color:var(--muted);cursor:pointer;letter-spacing:0.5px;font-family:'Barlow',sans-serif;transition:all 0.18s;text-transform:uppercase}
+.tab.active{background:linear-gradient(135deg,rgba(240,192,64,0.22),rgba(240,192,64,0.08));color:var(--gold);border:1px solid rgba(240,192,64,0.35)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 4px 32px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.04)}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);margin-bottom:12px}
+.fg{margin-bottom:11px}
+.flabel{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block}
+.finput{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:var(--radius-sm);padding:12px 13px;font-size:15px;color:var(--text);font-family:'Barlow',sans-serif;outline:none;transition:border-color 0.2s;-webkit-appearance:none}
+.finput:focus{border-color:rgba(240,192,64,0.5);background:rgba(255,255,255,0.07)}
+.finput::placeholder{color:var(--muted2)}
+.btn{width:100%;padding:13px;border-radius:var(--radius-sm);font-family:'Barlow',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.8px;cursor:pointer;border:none;margin-bottom:8px;transition:all 0.16s;-webkit-appearance:none;text-transform:uppercase}
+.btn:last-child{margin-bottom:0}
+.btn:active{transform:scale(0.97)}
+.btn-gold{background:linear-gradient(135deg,#f5c842 0%,#d4a820 100%);color:#000;box-shadow:0 4px 18px rgba(240,192,64,0.28)}
+.btn-ghost{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);color:var(--text)}
+.btn-red{background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.25);color:#fca5a5}
+.btn-blue{background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.3);color:#93c5fd}
+.btn-sm{width:auto;padding:6px 14px;font-size:11px;border-radius:var(--radius-xs);margin-bottom:0}
+.or-div{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin:10px 0}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.07)}
+.msg{font-size:13px;padding:9px 13px;border-radius:var(--radius-sm);margin-bottom:10px;font-weight:600;line-height:1.4}
+.msg-ok{background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.28);color:#4ade80}
+.msg-err{background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.28);color:#fca5a5}
+.msg-info{background:rgba(240,192,64,0.08);border:1px solid rgba(240,192,64,0.2);color:var(--gold)}
+
+/* POSITION PICKER */
+.pos-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.pos-btn{padding:14px 8px;border-radius:var(--radius-sm);border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);cursor:pointer;text-align:center;transition:all 0.18s;font-family:'Barlow',sans-serif}
+.pos-btn:active{transform:scale(0.96)}
+.pos-btn.selected{border-color:var(--gold);background:rgba(240,192,64,0.12)}
+.pos-icon{font-size:28px;display:block;margin-bottom:4px}
+.pos-name{font-size:13px;font-weight:700;color:var(--text);display:block}
+.pos-desc{font-size:10px;color:var(--muted);display:block;margin-top:2px}
+
+/* AVATARS */
+.ava{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0}
+.ava-lg{width:44px;height:44px;font-size:15px}
+.ava-md{width:36px;height:36px;font-size:12px}
+.ava-sm{width:28px;height:28px;font-size:10px}
+.ava-xs{width:20px;height:20px;font-size:8px}
+.ava-a{background:rgba(96,165,250,0.18);border:1.5px solid rgba(96,165,250,0.4);color:#93c5fd}
+.ava-b{background:rgba(251,191,36,0.18);border:1.5px solid rgba(251,191,36,0.4);color:#fde68a}
+.ava-n{background:rgba(240,192,64,0.1);border:1.5px solid rgba(240,192,64,0.25);color:var(--gold)}
+
+/* PLAYER ROWS */
+.player-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+.player-row:last-child{border-bottom:none}
+.pname{font-size:14px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmeta{font-size:11px;color:var(--muted)}
+.pos-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px;flex-shrink:0}
+.pos-tag-GK{background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);color:#fde68a}
+.pos-tag-DEF{background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.3);color:#93c5fd}
+.pos-tag-MID{background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.3);color:#86efac}
+.pos-tag-ATK{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:#fca5a5}
+
+/* RATING BADGE */
+.rb{min-width:40px;text-align:right;font-size:23px;font-weight:800;font-family:'Bebas Neue',sans-serif}
+.rb-g{color:var(--green-a);text-shadow:0 0 12px rgba(74,222,128,0.4)}
+.rb-y{color:var(--amber)}
+.rb-r{color:var(--red)}
+.rb-n{color:var(--muted2)}
+
+/* STARS */
+.stars{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.star{width:28px;height:28px;border-radius:var(--radius-xs);border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;color:rgba(255,255,255,0.22);transition:all 0.1s;font-family:'Barlow',sans-serif}
+.star:active{transform:scale(0.85)}
+.star.lit{background:rgba(240,192,64,0.18);border-color:rgba(240,192,64,0.45);color:var(--gold)}
+.star.done{background:rgba(74,222,128,0.14);border-color:rgba(74,222,128,0.38);color:var(--green-a)}
+
+/* CHECKBOX */
+.ck-label{display:flex;align-items:center;gap:9px;padding:9px 0;cursor:pointer;font-size:13px;font-weight:600;border-bottom:1px solid rgba(255,255,255,0.05)}
+.ck-label:last-child{border-bottom:none}
+.ck-box{width:20px;height:20px;border-radius:5px;border:1.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.ck-box.checked{background:var(--gold2);border-color:var(--gold)}
+.ck-check{color:#000;font-size:12px;font-weight:900;display:none}
+.ck-box.checked .ck-check{display:block}
+
+/* MODE TOGGLE */
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:4px;background:rgba(0,0,0,0.4);border-radius:var(--radius-sm);padding:4px;margin-bottom:12px}
+.mode-btn{padding:8px;font-size:12px;font-weight:700;text-align:center;border-radius:6px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-family:'Barlow',sans-serif;transition:all 0.18s}
+.mode-btn.active{background:rgba(240,192,64,0.18);color:var(--gold);border:1px solid rgba(240,192,64,0.35)}
+
+/* FIELD VISUAL */
+.field-visual{background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-sm);padding:14px 12px;margin-bottom:12px;position:relative;overflow:hidden}
+.field-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.1)}
+.field-circle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,0.1)}
+.teams-grid{display:grid;grid-template-columns:1fr 1fr;position:relative;z-index:1}
+.team-half{padding:0 8px}
+.team-lbl{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1.5px;margin-bottom:8px}
+.team-lbl-a{color:#93c5fd}.team-lbl-b{color:#fde68a}
+.p-chip{display:inline-flex;align-items:center;gap:5px;border-radius:var(--radius-xs);padding:4px 7px;font-size:12px;font-weight:700;margin:0 4px 5px 0}
+.p-chip-a{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.22)}
+.p-chip-b{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.22)}
+
+/* SCORE */
+.score-display{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 0;margin:8px 0}
+.score-team{text-align:center;flex:1}
+.score-team-name{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.score-num{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1;color:var(--gold);text-shadow:0 0 20px var(--gold-glow)}
+.score-vs{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--muted)}
+.score-inp{width:64px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);border-radius:var(--radius-sm);padding:10px;font-size:22px;font-family:'Bebas Neue',sans-serif;color:var(--gold);text-align:center;outline:none;-webkit-appearance:none}
+.score-inp:focus{border-color:rgba(240,192,64,0.5)}
+
+/* VOTE CARDS */
+.vote-card{display:flex;align-items:center;gap:10px;padding:10px;border-radius:var(--radius-sm);border:1px solid rgba(255,255,255,0.07);margin-bottom:7px;cursor:pointer;transition:all 0.15s;background:rgba(255,255,255,0.02)}
+.vote-card:active{transform:scale(0.97)}
+.vote-card.voted-best{border-color:rgba(240,192,64,0.45);background:rgba(240,192,64,0.08)}
+.vote-card.voted-worst{border-color:rgba(248,113,113,0.45);background:rgba(248,113,113,0.08)}
+.radio{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.radio.on-best{border-color:var(--gold);background:var(--gold)}
+.radio.on-worst{border-color:var(--red);background:var(--red)}
+.radio-dot{width:8px;height:8px;border-radius:50%;background:#000}
+
+/* PROGRESS */
+.prog-wrap{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;margin-top:6px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--green-a));border-radius:2px;transition:width 0.4s}
+
+/* CLASAMENT */
+.rank-num{font-family:'Bebas Neue',sans-serif;font-size:24px;width:28px;text-align:center;flex-shrink:0}
+.rk1{color:var(--gold);text-shadow:0 0 14px var(--gold-glow)}
+.rk2{color:#d1d5db}.rk3{color:#d97706}.rkn{color:var(--muted2)}
+
+/* STAT CHIPS */
+.stat-chips{display:flex;gap:8px;margin-bottom:12px}
+.stat-chip{display:flex;flex-direction:column;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-sm);padding:10px 8px;flex:1}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);line-height:1}
+.stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:0.5px;text-align:center}
+
+/* HISTORY */
+.hist-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-sm);padding:12px;margin-bottom:10px;cursor:pointer;transition:all 0.15s}
+.hist-card:hover{border-color:rgba(240,192,64,0.25);background:rgba(240,192,64,0.04)}
+.hist-score{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);letter-spacing:2px}
+.hist-date{font-size:11px;color:var(--muted)}
+.hist-teams{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;align-items:center}
+.hist-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:var(--radius-xs)}
+.hist-badge-a{background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.25);color:#93c5fd}
+.hist-badge-b{background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.25);color:#fde68a}
+.hist-expanded{margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.07)}
+.award-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:13px}
+
+/* NEW PLAYER PULSE */
+@keyframes newplayer{0%{background:rgba(240,192,64,0.2)}100%{background:transparent}}
+.new-player{animation:newplayer 2s ease-out}
+
+.spinner{width:32px;height:32px;border:3px solid rgba(240,192,64,0.15);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;margin:24px auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+.empty{text-align:center;padding:28px 16px;color:var(--muted);font-size:13px}
+.empty-icon{font-size:38px;margin-bottom:10px;display:block}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:14px 0 8px}
+.screen{display:none}.screen.active{display:block}
+.tab-panel{display:none}.tab-panel.active{display:block}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:rgba(10,22,10,0.97);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 18px;font-size:13px;font-weight:600;color:var(--text);transition:transform 0.3s;z-index:999;white-space:nowrap;box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="pitch-wrap">
+  <div class="pitch-overlay"></div>
+  <div class="pitch-vignette"></div>
+  <svg class="pitch-svg" viewBox="0 0 390 844" preserveAspectRatio="xMidYMid slice">
+    <rect x="28" y="28" width="334" height="788" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.8"/>
+    <line x1="28" y1="422" x2="362" y2="422" stroke="rgba(255,255,255,0.28)" stroke-width="1.8"/>
+    <circle cx="195" cy="422" r="60" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.8"/>
+    <circle cx="195" cy="422" r="4" fill="rgba(255,255,255,0.45)"/>
+    <rect x="120" y="28" width="150" height="114" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+    <rect x="153" y="28" width="84" height="52" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+    <rect x="120" y="702" width="150" height="114" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+    <rect x="153" y="764" width="84" height="52" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1.2"/>
+    <circle cx="195" cy="142" r="3.5" fill="rgba(255,255,255,0.32)"/>
+    <circle cx="195" cy="702" r="3.5" fill="rgba(255,255,255,0.32)"/>
+    <path d="M153 28 Q195 2 237 28" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.2"/>
+    <path d="M153 816 Q195 842 237 816" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.2"/>
+    <circle cx="60" cy="28" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <circle cx="330" cy="28" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <circle cx="60" cy="816" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    <circle cx="330" cy="816" r="10" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+  </svg>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div class="app">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="logo-main">⚽ Berarii din Vegas</div>
+        <div class="logo-sub">Football Crew Manager</div>
+      </div>
+      <div class="header-right" id="hdr-right">
+        <button class="btn-login-hdr" onclick="showScreen('s-login')">Intră</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-body">
+
+    <!-- LOGIN -->
+    <div id="s-login" class="screen active">
+      <div style="margin-top:16px"></div>
+      <div class="card">
+        <div class="card-title">🔐 Autentificare</div>
+        <div id="login-msg"></div>
+        <div class="fg"><div class="flabel">Email</div>
+          <input class="finput" type="email" id="l-email" placeholder="adresa@email.com" autocomplete="email"></div>
+        <div class="fg"><div class="flabel">Parolă</div>
+          <input class="finput" type="password" id="l-pass" placeholder="••••••••"
+            onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn btn-gold" onclick="doLogin()">⚽ Intră în cont</button>
+        <div class="or-div">sau</div>
+        <button class="btn btn-ghost" onclick="showScreen('s-register')">Înregistrează-te</button>
+      </div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="s-register" class="screen">
+      <div style="margin-top:16px"></div>
+      <div class="card">
+        <div class="card-title">🧑‍🤝‍🧑 Cont nou</div>
+        <div id="reg-msg"></div>
+        <div class="fg"><div class="flabel">Username (fără spații)</div>
+          <input class="finput" type="text" id="r-user" placeholder="ex: cristi_gicu"
+            oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_]/g,'')"></div>
+        <div class="fg"><div class="flabel">Email</div>
+          <input class="finput" type="email" id="r-email" placeholder="adresa@email.com"></div>
+        <div class="fg"><div class="flabel">Parolă (min 6 caractere)</div>
+          <input class="finput" type="password" id="r-pass" placeholder="••••••••"></div>
+        <div class="fg">
+          <div class="flabel">Poziția ta pe teren</div>
+          <div class="pos-grid">
+            <div class="pos-btn selected" id="pos-portar" onclick="selectPos('portar')">
+              <span class="pos-icon">🧤</span>
+              <span class="pos-name">Portar</span>
+              <span class="pos-desc">Apără poarta</span>
+            </div>
+            <div class="pos-btn" id="pos-fundas" onclick="selectPos('fundas')">
+              <span class="pos-icon">🛡️</span>
+              <span class="pos-name">Fundaș</span>
+              <span class="pos-desc">Linia de apărare</span>
+            </div>
+            <div class="pos-btn" id="pos-mijlocas" onclick="selectPos('mijlocas')">
+              <span class="pos-icon">⚙️</span>
+              <span class="pos-name">Mijlocaș</span>
+              <span class="pos-desc">Construiește jocul</span>
+            </div>
+            <div class="pos-btn" id="pos-atacant" onclick="selectPos('atacant')">
+              <span class="pos-icon">⚡</span>
+              <span class="pos-name">Atacant</span>
+              <span class="pos-desc">Marchează goluri</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="doRegister()">Creează cont</button>
+        <div class="or-div">sau</div>
+        <button class="btn btn-ghost" onclick="showScreen('s-login')">← Înapoi</button>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div id="s-main" class="screen">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('p-meci',this)">⚽ Meci</button>
+        <button class="tab" onclick="switchTab('p-note',this)">⭐ Note</button>
+        <button class="tab" onclick="switchTab('p-cls',this)">🏆 Clasament</button>
+        <button class="tab" onclick="switchTab('p-hist',this)">📋 Istoric</button>
+      </div>
+      <div id="p-meci" class="tab-panel active">
+        <div id="admin-box"></div>
+        <div id="meci-box"></div>
+      </div>
+      <div id="p-note" class="tab-panel"><div id="note-box"></div></div>
+      <div id="p-cls" class="tab-panel"><div id="cls-box"></div></div>
+      <div id="p-hist" class="tab-panel"><div id="hist-box"></div></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+const SUPA_URL = 'https://nroiezmktpwsobokrumb.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5yb2llem1rdHB3c29ib2tydW1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxNzIwNTgsImV4cCI6MjA4OTc0ODA1OH0.mG-aqZ_l4najbAdLofONn5ov0WVkYGFL4ZYD30Bd3GA';
+const ADMINS = ['cristi'];
+const POSITIONS = {
+  portar:   { icon:'🧤', label:'Portar',   tag:'GK'  },
+  fundas:   { icon:'🛡️', label:'Fundaș',   tag:'DEF' },
+  mijlocas: { icon:'⚙️', label:'Mijlocaș', tag:'MID' },
+  atacant:  { icon:'⚡', label:'Atacant',  tag:'ATK' },
+};
+
+const sb = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let me = null;
+let currentMatch = null;
+let allPlayers = [];
+let matchRatings = [];
+let motmVotes = [];
+let woatVotes = [];
+let genMode = 'balanced';
+let selectedPos = 'portar';
+let realtimeChannel = null;
+
+/* ── BOOT ─────────────────────────────────────────── */
+(async () => {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session?.user) { await loadProfile(session.user); await enterMain(); }
+  sb.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_IN' && session) { await loadProfile(session.user); await enterMain(); }
+    if (event === 'SIGNED_OUT') { me=null; updateHeader(); cleanupRealtime(); showScreen('s-login'); }
+  });
+})();
+
+/* ── AUTH ─────────────────────────────────────────── */
+async function loadProfile(user) {
+  const { data } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  me = { id:user.id, username:data?.username||user.email.split('@')[0], email:user.email, position:data?.position||'mijlocas' };
+}
+
+async function doLogin() {
+  const email=v('l-email'), pass=v('l-pass');
+  if (!email||!pass) return showMsg('login-msg','Completează câmpurile','err');
+  showMsg('login-msg','Se conectează...','info');
+  const { error } = await sb.auth.signInWithPassword({ email, password:pass });
+  if (error) showMsg('login-msg','Email sau parolă greșită','err');
+}
+
+async function doRegister() {
+  const username=v('r-user'), email=v('r-email'), pass=v('r-pass');
+  if (!username||!email||!pass) return showMsg('reg-msg','Completează toate câmpurile','err');
+  if (username.length<2) return showMsg('reg-msg','Username prea scurt','err');
+  if (pass.length<6) return showMsg('reg-msg','Parola prea scurtă (min 6)','err');
+  showMsg('reg-msg','Se creează contul...','info');
+  const { data, error } = await sb.auth.signUp({
+    email, password:pass,
+    options:{ data:{ username, position:selectedPos } }
+  });
+  if (error) return showMsg('reg-msg',error.message,'err');
+  // auto login after register (no email confirm)
+  if (data?.session) {
+    await loadProfile(data.session.user);
+    await enterMain();
+  } else {
+    // try login directly
+    const { error:e2 } = await sb.auth.signInWithPassword({ email, password:pass });
+    if (e2) showMsg('reg-msg','Cont creat! Acum loghează-te.','ok');
+  }
+}
+
+async function doLogout() { await sb.auth.signOut(); }
+const isAdmin = () => me && ADMINS.includes(me.username);
+
+function selectPos(pos) {
+  selectedPos = pos;
+  Object.keys(POSITIONS).forEach(p => {
+    document.getElementById('pos-'+p)?.classList.toggle('selected', p===pos);
+  });
+}
+
+/* ── ENTER MAIN ───────────────────────────────────── */
+async function enterMain() {
+  updateHeader(); showScreen('s-main');
+  await loadPlayers();
+  await loadActiveMatch();
+  renderMeci(); renderNote();
+  setupRealtime();
+}
+
+async function loadPlayers() {
+  const { data } = await sb.from('profiles').select('*').order('username');
+  allPlayers = data || [];
+}
+
+async function loadActiveMatch() {
+  const { data } = await sb.from('matches').select('*').eq('status','active')
+    .order('created_at',{ascending:false}).limit(1).maybeSingle();
+  currentMatch = data;
+  if (currentMatch) {
+    const [{ data:r },{ data:m },{ data:w }] = await Promise.all([
+      sb.from('ratings').select('*').eq('match_id',currentMatch.id),
+      sb.from('motm_votes').select('*').eq('match_id',currentMatch.id),
+      sb.from('woat_votes').select('*').eq('match_id',currentMatch.id),
+    ]);
+    matchRatings=r||[]; motmVotes=m||[]; woatVotes=w||[];
+  } else { matchRatings=[]; motmVotes=[]; woatVotes=[]; }
+}
+
+/* ── REALTIME ─────────────────────────────────────── */
+function setupRealtime() {
+  cleanupRealtime();
+  realtimeChannel = sb.channel('app-realtime')
+    // new player registered
+    .on('postgres_changes',{ event:'INSERT', schema:'public', table:'profiles' }, async (payload) => {
+      const newP = payload.new;
+      if (!allPlayers.find(p=>p.id===newP.id)) {
+        allPlayers.push(newP);
+        allPlayers.sort((a,b)=>a.username.localeCompare(b.username));
+        // refresh admin box if visible
+        const ab = document.getElementById('admin-box');
+        if (ab && ab.innerHTML !== '') renderAdminBox();
+        toast(`👋 ${newP.username} s-a alăturat!`);
+      }
+    })
+    // match changes
+    .on('postgres_changes',{ event:'INSERT', schema:'public', table:'matches' }, async (payload) => {
+      const m = payload.new;
+      if (m.status==='active') {
+        currentMatch=m; matchRatings=[]; motmVotes=[]; woatVotes=[];
+        renderMeci(); renderNote();
+        toast('⚽ Meci nou generat!');
+      }
+    })
+    .on('postgres_changes',{ event:'UPDATE', schema:'public', table:'matches' }, async (payload) => {
+      const m = payload.new;
+      if (currentMatch && m.id===currentMatch.id) {
+        currentMatch={...currentMatch,...m};
+        renderMeciStatus();
+      }
+    })
+    // new rating
+    .on('postgres_changes',{ event:'INSERT', schema:'public', table:'ratings' }, async (payload) => {
+      const r = payload.new;
+      if (currentMatch && r.match_id===currentMatch.id) {
+        if (!matchRatings.find(x=>x.id===r.id)) matchRatings.push(r);
+        if (document.getElementById('p-note').classList.contains('active')) renderNote();
+        if (document.getElementById('p-cls').classList.contains('active')) renderCls();
+      }
+    })
+    // new motm vote
+    .on('postgres_changes',{ event:'INSERT', schema:'public', table:'motm_votes' }, (payload) => {
+      const v2 = payload.new;
+      if (currentMatch && v2.match_id===currentMatch.id) {
+        if (!motmVotes.find(x=>x.voter_id===v2.voter_id)) motmVotes.push(v2);
+        renderMeciStatus();
+      }
+    })
+    .on('postgres_changes',{ event:'UPDATE', schema:'public', table:'motm_votes' }, (payload) => {
+      const v2 = payload.new;
+      if (currentMatch && v2.match_id===currentMatch.id) {
+        const idx=motmVotes.findIndex(x=>x.voter_id===v2.voter_id);
+        if(idx>=0) motmVotes[idx]=v2; else motmVotes.push(v2);
+        renderMeciStatus();
+      }
+    })
+    // new woat vote
+    .on('postgres_changes',{ event:'INSERT', schema:'public', table:'woat_votes' }, (payload) => {
+      const v2 = payload.new;
+      if (currentMatch && v2.match_id===currentMatch.id) {
+        if (!woatVotes.find(x=>x.voter_id===v2.voter_id)) woatVotes.push(v2);
+        renderMeciStatus();
+      }
+    })
+    .on('postgres_changes',{ event:'UPDATE', schema:'public', table:'woat_votes' }, (payload) => {
+      const v2 = payload.new;
+      if (currentMatch && v2.match_id===currentMatch.id) {
+        const idx=woatVotes.findIndex(x=>x.voter_id===v2.voter_id);
+        if(idx>=0) woatVotes[idx]=v2; else woatVotes.push(v2);
+        renderMeciStatus();
+      }
+    })
+    .subscribe();
+}
+
+function cleanupRealtime() {
+  if (realtimeChannel) { sb.removeChannel(realtimeChannel); realtimeChannel=null; }
+}
+
+/* ── RENDER MECI ──────────────────────────────────── */
+function renderMeci() { renderAdminBox(); renderMeciStatus(); }
+
+function renderAdminBox() {
+  const el = document.getElementById('admin-box');
+  if (!isAdmin()) { el.innerHTML=''; return; }
+  const checked = currentMatch ? [...(currentMatch.team_a||[]),...(currentMatch.team_b||[])] : [];
+  el.innerHTML = `
+  <div class="card">
+    <div class="card-title">⚙️ Panel Admin</div>
+    <div class="sec-lbl" style="margin-top:0">Mod generare echipe</div>
+    <div class="mode-toggle">
+      <button class="mode-btn ${genMode==='balanced'?'active':''}" onclick="setGenMode('balanced')">⚖️ Echilibrat după rating</button>
+      <button class="mode-btn ${genMode==='random'?'active':''}" onclick="setGenMode('random')">🎲 Random pur</button>
+    </div>
+    <div class="sec-lbl">Selectează jucătorii prezenți <span id="sel-count" style="color:var(--gold)">(${checked.length})</span></div>
+    <div id="pcheck">
+      ${allPlayers.map(p=>{
+        const pos=POSITIONS[p.position]||POSITIONS.mijlocas;
+        return `<label class="ck-label" onclick="toggleCk('ck-${p.id}')">
+          <div class="ck-box ${checked.includes(p.id)?'checked':''}" id="ck-${p.id}" data-id="${p.id}"><span class="ck-check">✓</span></div>
+          <div class="ava ava-sm ava-n">${ini(p.username)}</div>
+          <span style="flex:1">${p.username}</span>
+          <span class="pos-tag pos-tag-${pos.tag}">${pos.icon} ${pos.tag}</span>
+          <span id="rating-${p.id}" style="font-family:'Bebas Neue',sans-serif;font-size:16px;color:var(--muted2);min-width:32px;text-align:right">—</span>
+        </label>`;}).join('')}
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn btn-gold" onclick="genEchipe()">⚽ Generează echipe</button>
+      ${currentMatch?`<button class="btn btn-red" onclick="resetMeci()">🗑 Resetează meciul</button>`:''}
+    </div>
+  </div>`;
+  loadPlayerRatingsForAdmin();
+}
+
+async function loadPlayerRatingsForAdmin() {
+  const { data } = await sb.from('ratings').select('rated_id,score');
+  if (!data) return;
+  allPlayers.forEach(p=>{
+    const pr=data.filter(r=>r.rated_id===p.id);
+    const el=document.getElementById('rating-'+p.id);
+    if (!el) return;
+    // rating = media intre 10 (initial) si notele primite
+    let displayRating;
+    if (pr.length===0) {
+      displayRating=10;
+      el.textContent='10.0';
+      el.style.color='var(--green-a)';
+    } else {
+      const avg=pr.reduce((s,r)=>s+r.score,0)/pr.length;
+      displayRating=avg;
+      el.textContent=avg.toFixed(1);
+      el.style.color=avg>=8?'var(--green-a)':avg>=6?'var(--amber)':'var(--red)';
+    }
+  });
+}
+
+function setGenMode(mode) { genMode=mode; renderAdminBox(); }
+
+function toggleCk(id) {
+  const el=document.getElementById(id);
+  if(el) {
+    el.classList.toggle('checked');
+    // update count
+    const cnt=document.querySelectorAll('[id^="ck-"].checked').length;
+    const sc=document.getElementById('sel-count');
+    if(sc) sc.textContent=`(${cnt})`;
+  }
+}
+
+function renderMeciStatus() {
+  const el=document.getElementById('meci-box');
+  if (!currentMatch) {
+    el.innerHTML=`<div class="card"><div class="empty"><span class="empty-icon">⚽</span><strong style="color:var(--text);font-size:15px;display:block;margin-bottom:6px">Niciun meci activ</strong>Așteaptă adminul să genereze echipele...</div></div>`;
+    return;
+  }
+  const m=currentMatch;
+  const allIds=[...(m.team_a||[]),...(m.team_b||[])];
+  const others=allIds.filter(id=>id!==me?.id);
+  const mcBest={},mcWorst={};
+  motmVotes.forEach(v=>{mcBest[v.voted_for]=(mcBest[v.voted_for]||0)+1});
+  woatVotes.forEach(v=>{mcWorst[v.voted_for]=(mcWorst[v.voted_for]||0)+1});
+  const myBest=motmVotes.find(v=>v.voter_id===me?.id);
+  const myWorst=woatVotes.find(v=>v.voter_id===me?.id);
+  const hasScore=m.score_a!==null&&m.score_b!==null;
+
+  el.innerHTML=`
+  <div class="card">
+    <div class="card-title">⚽ Echipele meciului</div>
+    <div class="field-visual">
+      <div class="field-line"></div><div class="field-circle"></div>
+      <div class="teams-grid">
+        <div class="team-half">
+          <div class="team-lbl team-lbl-a">Echipa A</div>
+          ${(m.team_a||[]).map(id=>{
+            const p=allPlayers.find(x=>x.id===id);
+            const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+            return `<div class="p-chip p-chip-a"><div class="ava ava-xs ava-a">${ini(pName(id))}</div>${pName(id)} ${pos.icon}</div>`;
+          }).join('')}
+        </div>
+        <div class="team-half">
+          <div class="team-lbl team-lbl-b">Echipa B</div>
+          ${(m.team_b||[]).map(id=>{
+            const p=allPlayers.find(x=>x.id===id);
+            const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+            return `<div class="p-chip p-chip-b"><div class="ava ava-xs ava-b">${ini(pName(id))}</div>${pName(id)} ${pos.icon}</div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+    ${hasScore?`
+    <div class="score-display">
+      <div class="score-team"><div class="score-team-name" style="color:#93c5fd">Echipa A</div><div class="score-num">${m.score_a}</div></div>
+      <div class="score-vs">—</div>
+      <div class="score-team"><div class="score-team-name" style="color:#fde68a">Echipa B</div><div class="score-num">${m.score_b}</div></div>
+    </div>`:''}
+    ${isAdmin()?`
+    <div class="sec-lbl">Scor final</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:10px">
+      <div style="text-align:center"><div style="font-size:10px;color:#93c5fd;font-weight:700;margin-bottom:4px;letter-spacing:1px">ECHIPA A</div>
+        <input class="score-inp" type="number" min="0" max="99" id="score-a" value="${m.score_a??''}" placeholder="0"></div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--muted)">—</div>
+      <div style="text-align:center"><div style="font-size:10px;color:#fde68a;font-weight:700;margin-bottom:4px;letter-spacing:1px">ECHIPA B</div>
+        <input class="score-inp" type="number" min="0" max="99" id="score-b" value="${m.score_b??''}" placeholder="0"></div>
+    </div>
+    <button class="btn btn-blue" onclick="saveScore()">💾 Salvează scorul</button>`:''}
+  </div>
+
+  ${others.length>0?`
+  <div class="card">
+    <div class="card-title">🗳️ Votează</div>
+    <div class="sec-lbl" style="margin-top:0">🏆 Cel mai bun jucător</div>
+    ${others.map(id=>{
+      const name=pName(id); const isA=(m.team_a||[]).includes(id);
+      const voted=myBest?.voted_for===id;
+      const p=allPlayers.find(x=>x.id===id);
+      const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+      return `<div class="vote-card ${voted?'voted-best':''}" onclick="voteBest('${id}')">
+        <div class="radio ${voted?'on-best':''}">${voted?'<div class="radio-dot"></div>':''}</div>
+        <div class="ava ava-md ${isA?'ava-a':'ava-b'}">${ini(name)}</div>
+        <div style="flex:1;min-width:0"><div class="pname">${name}</div>
+          <div class="pmeta">${pos.icon} ${pos.label} · Echipa ${isA?'A':'B'}</div></div>
+        <div style="font-size:11px;color:var(--muted)">${mcBest[id]||0} vot${(mcBest[id]||0)!==1?'uri':''}${voted?' ✓':''}</div>
+      </div>`;}).join('')}
+    <div class="sec-lbl">💩 Cel mai slab jucător</div>
+    ${others.map(id=>{
+      const name=pName(id); const isA=(m.team_a||[]).includes(id);
+      const voted=myWorst?.voted_for===id;
+      const p=allPlayers.find(x=>x.id===id);
+      const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+      return `<div class="vote-card ${voted?'voted-worst':''}" onclick="voteWorst('${id}')">
+        <div class="radio ${voted?'on-worst':''}">${voted?'<div class="radio-dot"></div>':''}</div>
+        <div class="ava ava-md ${isA?'ava-a':'ava-b'}">${ini(name)}</div>
+        <div style="flex:1;min-width:0"><div class="pname">${name}</div>
+          <div class="pmeta">${pos.icon} ${pos.label} · Echipa ${isA?'A':'B'}</div></div>
+        <div style="font-size:11px;color:var(--muted)">${mcWorst[id]||0} vot${(mcWorst[id]||0)!==1?'uri':''}${voted?' ✓':''}</div>
+      </div>`;}).join('')}
+  </div>`:''}`;
+}
+
+/* ── GEN ECHIPE ───────────────────────────────────── */
+async function genEchipe() {
+  const sel=[...document.querySelectorAll('[id^="ck-"].checked')].map(el=>el.dataset.id);
+  if (sel.length<2) { toast('Selectează cel puțin 2 jucători!'); return; }
+  let teamA,teamB;
+  if (genMode==='balanced') {
+    const {data:rdata}=await sb.from('ratings').select('rated_id,score');
+    const avgMap={};
+    sel.forEach(id=>{
+      const pr=(rdata||[]).filter(r=>r.rated_id===id);
+      // rating = 10 daca nu a primit note, altfel media
+      avgMap[id]=pr.length>0?pr.reduce((s,r)=>s+r.score,0)/pr.length:10;
+    });
+    const sorted=[...sel].sort((a,b)=>avgMap[b]-avgMap[a]);
+    teamA=[];teamB=[];
+    sorted.forEach((id,i)=>{
+      const round=Math.floor(i/2),pos=i%2;
+      if(round%2===0){pos===0?teamA.push(id):teamB.push(id);}
+      else{pos===0?teamB.push(id):teamA.push(id);}
+    });
+  } else {
+    const sh=[...sel].sort(()=>Math.random()-0.5);
+    const mid=Math.ceil(sh.length/2);
+    teamA=sh.slice(0,mid);teamB=sh.slice(mid);
+  }
+  if (currentMatch) await sb.from('matches').update({status:'completed'}).eq('id',currentMatch.id);
+  const name=`Meci ${new Date().toLocaleDateString('ro-RO',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}`;
+  const {data,error}=await sb.from('matches').insert({name,status:'active',team_a:teamA,team_b:teamB,created_by:me.id}).select().single();
+  if (error){toast('Eroare: '+error.message);return;}
+  currentMatch=data;matchRatings=[];motmVotes=[];woatVotes=[];
+  renderMeci();renderNote();
+  toast(`⚽ Echipe generate! Mod: ${genMode==='balanced'?'echilibrat':'random'}`);
+}
+
+async function resetMeci() {
+  if (!confirm('Ștergi meciul curent?')) return;
+  if (currentMatch) await sb.from('matches').update({status:'completed'}).eq('id',currentMatch.id);
+  currentMatch=null;matchRatings=[];motmVotes=[];woatVotes=[];
+  renderMeci();renderNote();toast('Meci resetat');
+}
+
+async function saveScore() {
+  const a=parseInt(document.getElementById('score-a')?.value);
+  const b=parseInt(document.getElementById('score-b')?.value);
+  if (isNaN(a)||isNaN(b)){toast('Introduceți ambele scoruri!');return;}
+  await sb.from('matches').update({score_a:a,score_b:b}).eq('id',currentMatch.id);
+  currentMatch.score_a=a;currentMatch.score_b=b;
+  renderMeciStatus();toast('✓ Scor salvat!');
+}
+
+async function voteBest(playerId) {
+  if (!currentMatch||!me) return;
+  const ex=motmVotes.find(v=>v.voter_id===me.id);
+  if(ex){await sb.from('motm_votes').update({voted_for:playerId}).eq('match_id',currentMatch.id).eq('voter_id',me.id);ex.voted_for=playerId;}
+  else{const{data}=await sb.from('motm_votes').insert({match_id:currentMatch.id,voter_id:me.id,voted_for:playerId}).select().single();if(data)motmVotes.push(data);}
+  renderMeciStatus();toast('🏆 Vot salvat!');
+}
+
+async function voteWorst(playerId) {
+  if (!currentMatch||!me) return;
+  const ex=woatVotes.find(v=>v.voter_id===me.id);
+  if(ex){await sb.from('woat_votes').update({voted_for:playerId}).eq('match_id',currentMatch.id).eq('voter_id',me.id);ex.voted_for=playerId;}
+  else{const{data}=await sb.from('woat_votes').insert({match_id:currentMatch.id,voter_id:me.id,voted_for:playerId}).select().single();if(data)woatVotes.push(data);}
+  renderMeciStatus();toast('💩 Vot salvat!');
+}
+
+/* ── RENDER NOTE ──────────────────────────────────── */
+function renderNote() {
+  const el=document.getElementById('note-box');
+  if (!currentMatch){el.innerHTML=`<div class="card"><div class="empty"><span class="empty-icon">⭐</span>Niciun meci activ pentru notare.</div></div>`;return;}
+  const allIds=[...(currentMatch.team_a||[]),...(currentMatch.team_b||[])];
+  const others=allIds.filter(id=>id!==me?.id);
+  const myR=matchRatings.filter(r=>r.rater_id===me?.id);
+  const done=myR.length;
+  el.innerHTML=`
+  <div class="card">
+    <div class="card-title">⭐ Noteaza colegii</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="pmeta">Notă de la 1 la 10</span>
+      <span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:${done===others.length&&others.length>0?'var(--green-a)':'var(--gold)'}">${done}/${others.length}</span>
+    </div>
+    <div class="prog-wrap" style="margin-bottom:14px"><div class="prog-fill" style="width:${others.length>0?(done/others.length*100):0}%"></div></div>
+    ${others.map(id=>{
+      const name=pName(id);const isA=(currentMatch.team_a||[]).includes(id);
+      const r=myR.find(r=>r.rated_id===id);const nota=r?.score;
+      const avg=calcAvg(id);
+      const p=allPlayers.find(x=>x.id===id);
+      const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+      return `<div style="padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.05)">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:7px">
+          <div class="ava ava-md ${isA?'ava-a':'ava-b'}">${ini(name)}</div>
+          <div style="flex:1;min-width:0">
+            <div class="pname">${name} <span class="pos-tag pos-tag-${(POSITIONS[p?.position]||POSITIONS.mijlocas).tag}">${pos.icon} ${pos.tag}</span></div>
+            <div class="pmeta">Echipa ${isA?'A':'B'} · medie: ${avg!==null?avg.toFixed(1)+' ★':'10.0 ★'}</div>
+          </div>
+          <div class="rb ${rbCls(nota??null)}">${nota??'—'}</div>
+        </div>
+        <div class="stars">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<div class="star ${nota!==undefined&&n<=nota?'done':''}" onclick="giveNote('${id}',${n})">${n}</div>`).join('')}</div>
+      </div>`;}).join('')}
+  </div>`;
+}
+
+async function giveNote(playerId,score) {
+  if (!currentMatch||!me) return;
+  const ex=matchRatings.find(r=>r.rater_id===me.id&&r.rated_id===playerId);
+  if(ex){await sb.from('ratings').update({score}).eq('match_id',currentMatch.id).eq('rater_id',me.id).eq('rated_id',playerId);ex.score=score;}
+  else{const{data}=await sb.from('ratings').insert({match_id:currentMatch.id,rater_id:me.id,rated_id:playerId,score}).select().single();if(data)matchRatings.push(data);}
+  renderNote();
+}
+
+/* ── RENDER CLASAMENT ─────────────────────────────── */
+async function renderCls() {
+  const el=document.getElementById('cls-box');
+  el.innerHTML=`<div class="card"><div class="spinner"></div></div>`;
+  const [{data:allR},{data:allM},{data:allW}]=await Promise.all([
+    sb.from('ratings').select('rated_id,score'),
+    sb.from('motm_votes').select('voted_for'),
+    sb.from('woat_votes').select('voted_for'),
+  ]);
+  const mc={},wc={};
+  (allM||[]).forEach(v=>{mc[v.voted_for]=(mc[v.voted_for]||0)+1});
+  (allW||[]).forEach(v=>{wc[v.voted_for]=(wc[v.voted_for]||0)+1});
+  const inM=currentMatch?[...(currentMatch.team_a||[]),...(currentMatch.team_b||[])]:[];
+  const stats=allPlayers.map(p=>{
+    const pr=(allR||[]).filter(r=>r.rated_id===p.id);
+    // rating starts at 10, goes up/down based on received notes
+    const avg=pr.length>0?pr.reduce((s,r)=>s+r.score,0)/pr.length:10;
+    return{...p,avg,cnt:pr.length,motm:mc[p.id]||0,woat:wc[p.id]||0};
+  }).sort((a,b)=>b.avg-a.avg);
+
+  el.innerHTML=`
+  ${currentMatch&&inM.length>0?`<div class="stat-chips">
+    <div class="stat-chip"><div class="stat-val">${currentMatch.team_a?.length||0}</div><div class="stat-lbl">Echipa A</div></div>
+    <div class="stat-chip"><div class="stat-val">${currentMatch.team_b?.length||0}</div><div class="stat-lbl">Echipa B</div></div>
+    <div class="stat-chip"><div class="stat-val">${matchRatings.length}</div><div class="stat-lbl">Note date</div></div>
+    <div class="stat-chip"><div class="stat-val">${motmVotes.length}</div><div class="stat-lbl">Voturi</div></div>
+  </div>`:''}
+  <div class="card">
+    <div class="card-title">🏆 Clasament Berarii</div>
+    ${stats.map((s,i)=>{
+      const rkc=i===0?'rk1':i===1?'rk2':i===2?'rk3':'rkn';
+      const isA=inM.length>0&&(currentMatch?.team_a||[]).includes(s.id);
+      const isB=inM.length>0&&(currentMatch?.team_b||[]).includes(s.id);
+      const pos=POSITIONS[s.position]||POSITIONS.mijlocas;
+      return `<div class="player-row">
+        <div class="rank-num ${rkc}">${i+1}</div>
+        <div class="ava ava-md ${isA?'ava-a':isB?'ava-b':'ava-n'}">${ini(s.username)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="pname">${s.username}${ADMINS.includes(s.username)?'<span style="font-size:10px;color:var(--gold);margin-left:4px">★</span>':''}</div>
+          <div class="pmeta">${pos.icon} ${pos.label} · ${s.cnt>0?s.cnt+' recenzii':'nou'}${s.motm?' · 🏆'+s.motm:''}${s.woat?' · 💩'+s.woat:''}</div>
+        </div>
+        <div class="rb ${rbCls(s.avg)}">${s.avg.toFixed(1)}</div>
+      </div>`;}).join('')}
+  </div>`;
+}
+
+/* ── RENDER ISTORIC ───────────────────────────────── */
+async function renderHist() {
+  const el=document.getElementById('hist-box');
+  el.innerHTML=`<div class="card"><div class="spinner"></div></div>`;
+  const {data:matches}=await sb.from('matches').select('*').neq('status','active').order('created_at',{ascending:false}).limit(30);
+  if (!matches||matches.length===0){
+    el.innerHTML=`<div class="card"><div class="empty"><span class="empty-icon">📋</span>Niciun meci finalizat încă.</div></div>`;return;
+  }
+  const ids=matches.map(m=>m.id);
+  const [{data:allR},{data:allM},{data:allW}]=await Promise.all([
+    sb.from('ratings').select('*').in('match_id',ids),
+    sb.from('motm_votes').select('*').in('match_id',ids),
+    sb.from('woat_votes').select('*').in('match_id',ids),
+  ]);
+  el.innerHTML=matches.map(m=>{
+    const mR=(allR||[]).filter(r=>r.match_id===m.id);
+    const mM=(allM||[]).filter(v=>v.match_id===m.id);
+    const mW=(allW||[]).filter(v=>v.match_id===m.id);
+    const allIds=[...(m.team_a||[]),...(m.team_b||[])];
+    const mcBest={};mM.forEach(v=>{mcBest[v.voted_for]=(mcBest[v.voted_for]||0)+1});
+    const mcWorst={};mW.forEach(v=>{mcWorst[v.voted_for]=(mcWorst[v.voted_for]||0)+1});
+    const bestId=Object.keys(mcBest).sort((a,b)=>mcBest[b]-mcBest[a])[0];
+    const worstId=Object.keys(mcWorst).sort((a,b)=>mcWorst[b]-mcWorst[a])[0];
+    const playerAvgs=allIds.map(id=>{
+      const pr=mR.filter(r=>r.rated_id===id);
+      const avg=pr.length>0?pr.reduce((s,r)=>s+r.score,0)/pr.length:null;
+      const p=allPlayers.find(x=>x.id===id);
+      const pos=POSITIONS[p?.position]||POSITIONS.mijlocas;
+      return{id,name:pName(id),avg,isA:(m.team_a||[]).includes(id),pos};
+    }).sort((a,b)=>(b.avg||0)-(a.avg||0));
+    const dateStr=new Date(m.created_at).toLocaleDateString('ro-RO',{day:'numeric',month:'short',year:'numeric'});
+    const hasScore=m.score_a!==null&&m.score_b!==null;
+    return `<div class="hist-card" onclick="toggleHist('h-${m.id}')">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <div><div style="font-size:14px;font-weight:700">${m.name}</div><div class="hist-date">${dateStr} · ${allIds.length} jucători</div></div>
+        ${hasScore?`<div class="hist-score">${m.score_a} — ${m.score_b}</div>`:'<div style="font-size:11px;color:var(--muted)">fără scor</div>'}
+      </div>
+      <div class="hist-teams">
+        ${(m.team_a||[]).map(id=>`<span class="hist-badge hist-badge-a">${pName(id)}</span>`).join('')}
+        <span style="font-size:10px;color:var(--muted)">vs</span>
+        ${(m.team_b||[]).map(id=>`<span class="hist-badge hist-badge-b">${pName(id)}</span>`).join('')}
+      </div>
+      <div id="h-${m.id}" style="display:none">
+        <div class="hist-expanded">
+          ${bestId?`<div class="award-row">🏆 <strong>Cel mai bun:</strong> ${pName(bestId)} (${mcBest[bestId]} voturi)</div>`:''}
+          ${worstId?`<div class="award-row">💩 <strong>Cel mai slab:</strong> ${pName(worstId)} (${mcWorst[worstId]} voturi)</div>`:''}
+          ${playerAvgs.length>0?`<div class="sec-lbl" style="margin-top:10px">Ratinguri meci</div>
+          ${playerAvgs.map(p=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.04)">
+            <div class="ava ava-sm ${p.isA?'ava-a':'ava-b'}">${ini(p.name)}</div>
+            <span style="font-size:13px;font-weight:600;flex:1">${p.name}</span>
+            <span class="pos-tag pos-tag-${p.pos.tag}">${p.pos.icon} ${p.pos.tag}</span>
+            <span class="rb ${rbCls(p.avg)}" style="font-size:18px">${p.avg!==null?p.avg.toFixed(1):'—'}</span>
+          </div>`).join('')}`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleHist(id){const el=document.getElementById(id);if(el)el.style.display=el.style.display==='none'?'block':'none';}
+
+/* ── HELPERS ──────────────────────────────────────── */
+function ini(n){return(n||'?').slice(0,2).toUpperCase()}
+function pName(id){return allPlayers.find(p=>p.id===id)?.username||'???'}
+function v(id){return document.getElementById(id)?.value.trim()||''}
+function calcAvg(id){const rs=matchRatings.filter(r=>r.rated_id===id);return rs.length>0?rs.reduce((s,r)=>s+r.score,0)/rs.length:null}
+function rbCls(v){if(v===null||v===undefined)return 'rb-n';if(v>=8)return 'rb-g';if(v>=6)return 'rb-y';return 'rb-r'}
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
+function showMsg(id,text,type){const el=document.getElementById(id);if(!el)return;const cls=type==='ok'?'msg-ok':type==='info'?'msg-info':'msg-err';el.innerHTML=`<div class="msg ${cls}">${text}</div>`;if(type!=='info')setTimeout(()=>el.innerHTML='',4000)}
+function updateHeader(){
+  const el=document.getElementById('hdr-right');
+  if(me){
+    const pos=POSITIONS[me.position]||POSITIONS.mijlocas;
+    el.innerHTML=`<div class="user-pill"><div class="ava-hdr">${ini(me.username)}</div><span>${me.username} ${pos.icon}${isAdmin()?' ★':''}</span></div><button class="btn-logout" onclick="doLogout()">Ieșire</button>`;
+  } else {
+    el.innerHTML=`<button class="btn-login-hdr" onclick="showScreen('s-login')">Intră</button>`;
+  }
+}
+function switchTab(panelId,btn){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');btn.classList.add('active');
+  if(panelId==='p-cls')renderCls();
+  if(panelId==='p-note')renderNote();
+  if(panelId==='p-hist')renderHist();
+}
+let toastTimer;
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800)}
+</script>
+</body>
+</html>
